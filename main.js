@@ -110,11 +110,13 @@ app.factory('notificationAlertService', ['$window', function($window){
     var positions = {
         "critical": {
             position: 'top center',
-            isModal: true
+            isModal: true,
+            autoHideDelay: 7000,
         },
         "non-critical": {
             position: 'right middle',
-            isModal: false
+            isModal: false,
+            autoHideDelay: 5000,
         }    
     }
     
@@ -138,21 +140,20 @@ app.factory('notificationAlertService', ['$window', function($window){
             createdTimeText: '4 hours ago'
         }, { 
             style: 'custom-notification',
-            autoHide: false,
             clickToHide: true,
             position: options.position,
             // show animation
             showAnimation: 'slideDown',
             // show animation duration
-            showDuration: 400,
+            showDuration: 200,
             // hide animation
             hideAnimation: 'slideUp',
             // hide animation duration
-            hideDuration: 200,
+            hideDuration: 100,
             // whether to auto-hide the notification
-            //autoHide: true,
+            autoHide: options.autoHide,
             // if autoHide, hide after milliseconds
-            autoHideDelay: 5000,
+            autoHideDelay: options.autoHideDelay,
 
             className: 'goya clearfix'
         });
@@ -198,7 +199,8 @@ app.factory('notificationAlertService', ['$window', function($window){
         var maxSimultaneousNotifications = 6;
         if($('.notifyjs-wrapper').length < maxSimultaneousNotifications){
             var options,
-                position = getAlignmentConfiguration(notification.type).position;
+                notificationTypeConfiguration = getAlignmentConfiguration(notification.type),
+                position = notificationTypeConfiguration.position;
 
             if(notification.forceCentralizedAlignment){
                 var defaultPosition = getDefaultAlignmentPosition();
@@ -209,7 +211,11 @@ app.factory('notificationAlertService', ['$window', function($window){
                 } 
             }
 
-            options = {position: position};
+            options = {
+                position: position,
+                autoHideDelay: notificationTypeConfiguration.autoHideDelay,
+                autoHide: notificationTypeConfiguration.autoHideDelay > 0
+            };
             showNotification(notification, options);
         }
     };
