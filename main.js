@@ -8,7 +8,6 @@ app.controller('myCtrl', ['$scope', 'notificationAlertService', 'notificationSer
         widthThreshold = 900;
 
     function init(){
-        notificationsList = notificationService.getNotifications();
 
         showNotifications();
 
@@ -30,23 +29,34 @@ app.controller('myCtrl', ['$scope', 'notificationAlertService', 'notificationSer
 
     function notifyCenter(){
         var notification = {
-            id:'1',
+            id:'6',
             title: 'notification hue',
-            type: 'critical'
+            type: 'critical',
+            forceCentralizedAlignment: shouldCentralizeNotifications(),
+            createdDate: new Date(),
+            isRead: false,
+            isShownAsAlert: false
         };
         notificationAlertService.notify(notification);
     }
     function notifyLeft(){
         var notification = {
-            id:'1',
+            id:'5',
             title: 'notification br',
-            type: 'non-critical'
+            type: 'non-critical',
+            forceCentralizedAlignment: shouldCentralizeNotifications(),
+            createdDate: new Date(),
+            isRead: false,
+            isShownAsAlert: false
         };
         notificationAlertService.notify(notification);
     }
 
     function showNotifications(){
         var shouldCentralize = shouldCentralizeNotifications();
+
+        notificationsList = notificationService.getNotifications();
+
         notificationsList.forEach(function(notification){
             notification.forceCentralizedAlignment = shouldCentralize;
             notificationAlertService.notify(notification);
@@ -78,30 +88,47 @@ app.factory('notificationService', function(){
         {
             id:'1',
             title: 'notification 1',
-            type: 'non-critical'
+            type: 'non-critical',
+            createdDate: new Date('2016-01-02 03:23'),
+            isRead: false,
+            isShownAsAlert: false
         },
         {
             id:'2',
             title: 'notification 2',
-            type: 'non-critical' 
+            type: 'non-critical',
+            createdDate: new Date('2016-01-02 04:23'),
+            isRead: false,
+            isShownAsAlert: false
         },
         {
             id:'3',
             title: 'notification 3',
-            type: 'critical'
+            type: 'critical',
+            createdDate: new Date('2016-01-02 05:23'),
+            isRead: false,
+            isShownAsAlert: false
         },
         {
             id:'4',
             title: 'notification 4',
-            type: 'critical'
+            type: 'critical',
+            createdDate: new Date('2016-01-02 06:23'),
+            isRead: false,
+            isShownAsAlert: false
         }
     ];
     function getNotifications(){
         return notificationsList;
     };
 
+    function addNotification(notification){
+        notificationsList.push(notification);
+    };
+
     return {
-        getNotifications: getNotifications
+        getNotifications: getNotifications,
+        addNotification: addNotification
     }
 });
 
@@ -110,13 +137,13 @@ app.factory('notificationAlertService', ['$window', function($window){
     var positions = {
         "critical": {
             position: 'top center',
-            isModal: true,
-            autoHideDelay: 7000,
+            isModal: false,
+            autoHideDelay: 000,
         },
         "non-critical": {
-            position: 'right middle',
+            position: 'bottom left',
             isModal: false,
-            autoHideDelay: 5000,
+            autoHideDelay: 000,
         }    
     }
     
@@ -155,7 +182,7 @@ app.factory('notificationAlertService', ['$window', function($window){
             // if autoHide, hide after milliseconds
             autoHideDelay: options.autoHideDelay,
 
-            className: 'goya clearfix'
+            className: 'test ' + notification.type
         });
 
         //workaround for 'center' notifications.
