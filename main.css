@@ -1,0 +1,40 @@
+.notification-alert.non-critical{
+        width: 300px;
+        height: 66px;
+        border: 1px solid black;
+        position: relative;
+        padding: 10px;
+        
+}
+.notification-alert.image{
+        width: 45px;
+        height: 45px;
+        margin-right: 10px;
+        float: left;
+        border: 1px solid;
+}
+.notification-alert.text{
+    
+}
+.test-button{
+    margin: 10px
+}
+.notifyjs-corner{
+    /*transform: translate(-50%);
+    left: 50% !important;*/
+}
+
+.notifyjs-non-critical-goya{
+    /*margin-left: -120px;*/
+}
+
+.notification-modal-mask{
+    z-index: 1060;
+    background-color: black;
+    opacity: 0.4;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
