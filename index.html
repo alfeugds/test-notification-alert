@@ -42,10 +42,20 @@ app.controller('myCtrl', ['$scope', 'notificationAlertService', 'notificationSer
     }
 
     function notifyCenter(){
-        notificationAlertService.notify({position:'top center'});
+        var notification = {
+            id:'1',
+            title: 'notification hue',
+            type: 'critical'
+        };
+        notificationAlertService.notify(notification);
     }
     function notifyLeft(){
-        notificationAlertService.notify({position:'bottom left'});
+        var notification = {
+            id:'1',
+            title: 'notification br',
+            type: 'non-critical'
+        };
+        notificationAlertService.notify(notification);
     }
 
     function showNotifications(){
@@ -154,6 +164,8 @@ app.factory('notificationAlertService', ['$window', function($window){
             className: 'goya clearfix'
         });
 
+        //workaround for 'center' notifications.
+        //see bug https://github.com/notifyjs/notifyjs/issues/74
         if(options.position && options.position.includes('center')){
             var notifyJsCorner = $('.notifyjs-corner').filter(function() {
                 return this.style.left === '45%';
