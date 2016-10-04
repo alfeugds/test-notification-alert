@@ -113,7 +113,7 @@ app.factory('notificationAlertService', ['$window', function($window){
             isModal: true
         },
         "non-critical": {
-            position: 'left middle',
+            position: 'right middle',
             isModal: false
         }    
     }
@@ -200,9 +200,13 @@ app.factory('notificationAlertService', ['$window', function($window){
             var options,
                 position = getAlignmentConfiguration(notification.type).position;
 
-            if(notification.forceCentralizedAlignment && !position.includes('center')){
-                var criticalPosition = getAlignmentConfiguration('critical').position;
-                position = criticalPosition.split(' ')[0] + ' center' 
+            if(notification.forceCentralizedAlignment){
+                var defaultPosition = getDefaultAlignmentPosition();
+                if(defaultPosition.includes('top')){
+                    position = 'top center';    
+                } else {
+                    position = 'bottom center';
+                } 
             }
 
             options = {position: position};
