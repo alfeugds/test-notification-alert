@@ -17,7 +17,10 @@
     
 }
 .test-button{
-    margin: 10px
+    margin: 10px;
+    z-index: 1061;
+    position: relative;
+
 }
 .notifyjs-corner{
     /*transform: translate(-50%);

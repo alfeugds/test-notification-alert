@@ -172,22 +172,37 @@ app.factory('notificationAlertService', ['$window', function($window){
             // show animation
             showAnimation: 'slideDown',
             // show animation duration
-            showDuration: 200,
+            showDuration: 00,
             // hide animation
             hideAnimation: 'slideUp',
             // hide animation duration
-            hideDuration: 100,
+            hideDuration: 00,
             // whether to auto-hide the notification
             autoHide: options.autoHide,
             // if autoHide, hide after milliseconds
             autoHideDelay: options.autoHideDelay,
 
-            className: 'test ' + notification.type
+            className: 'test ' + notification.type + (options.isModal ? ' modal-alert' : '') 
         });
+
+        //handle centering the modal alerts
+        if(options.isModal){
+            var notifyJsCorner = $('.notifyjs-container .critical').parent().parent().parent();
+            notifyJsCorner
+                .css('left','50%')
+                .css('top','50%')
+                .css('transform','translate(-50%,-50%)')
+                .css('z-index','1065');
+        }
+        /*
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        */ 
 
         //workaround for 'center' notifications.
         //see bug https://github.com/notifyjs/notifyjs/issues/74
-        if(options.position && options.position.includes('center')){
+        else if(options.position && options.position.includes('center')){
             var notifyJsCorner = $('.notifyjs-corner').filter(function() {
                 return this.style.left === '45%';
             });
@@ -195,11 +210,8 @@ app.factory('notificationAlertService', ['$window', function($window){
                 .css('left','50%')
                 .css('margin-left','-150px');
         }
-        /*
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-        */ 
+
+        
         
     }
 
@@ -222,6 +234,10 @@ app.factory('notificationAlertService', ['$window', function($window){
         return 'bottom left';
     }
 
+    function getModalAlignmentPosition(){
+        return 'top center';
+    }
+
     function notify(notification){
         var maxSimultaneousNotifications = 6;
         if($('.notifyjs-wrapper').length < maxSimultaneousNotifications){
@@ -241,15 +257,35 @@ app.factory('notificationAlertService', ['$window', function($window){
             options = {
                 position: position,
                 autoHideDelay: notificationTypeConfiguration.autoHideDelay,
-                autoHide: notificationTypeConfiguration.autoHideDelay > 0
+                autoHide: notificationTypeConfiguration.autoHideDelay > 0,
+                isModal: notificationTypeConfiguration.isModal
             };
             showNotification(notification, options);
+            handleModalAlertsMask();
         }
     };
 
     function clearNotifications(){
         $('.notifyjs-corner').html('');
     }
+
+    function handleModalAlertsMask(){
+        if($('.notifyjs-container .critical.modal-alert').length > 0){
+            $('.notification-modal-mask').show();
+        } else {
+            $('.notification-modal-mask').hide();
+        }
+    }
+
+    function init(){
+        //handle critical notification clicks
+        $(document).on('click', '.notifyjs-container .critical', function(){
+            handleModalAlertsMask();
+            console.log('clicked critical')
+        })
+    }
+
+    init();
 
     return {
         notify: notify,
